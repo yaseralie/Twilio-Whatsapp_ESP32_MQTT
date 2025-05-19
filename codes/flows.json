@@ -1,0 +1,422 @@
+[
+    {
+        "id": "296a10caafc03760",
+        "type": "tab",
+        "label": "Whatsapp-ESP32",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "b1def47bcee243af",
+        "type": "group",
+        "z": "296a10caafc03760",
+        "name": "Receive Whatsapp message",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "a618070b38c9d281",
+            "5ed01ab412d84980",
+            "5eeb5066720dd406",
+            "d2258af6302bf40b",
+            "d4963ca7aeb3c0ab",
+            "ce8ebe2fda7f4903",
+            "91af376003903442",
+            "c00469b602ba3cf5",
+            "ca239e1ce943eaef",
+            "2980915aecb83227"
+        ],
+        "x": 34,
+        "y": 39,
+        "w": 1012,
+        "h": 242
+    },
+    {
+        "id": "8224221a2f77f718",
+        "type": "group",
+        "z": "296a10caafc03760",
+        "name": "Send Whatsapp",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "562dc85355db42c0",
+            "a3efe8c17cfe3372",
+            "5743d849f2bfe929",
+            "1bfea2d1c6170134",
+            "568f533c8f3ee837",
+            "ed482dbc6eac890b",
+            "62af73c5950e6e23"
+        ],
+        "x": 34,
+        "y": 319,
+        "w": 952,
+        "h": 122
+    },
+    {
+        "id": "562dc85355db42c0",
+        "type": "mqtt in",
+        "z": "296a10caafc03760",
+        "g": "8224221a2f77f718",
+        "name": "",
+        "topic": "yaser/ESP_Pub",
+        "qos": "1",
+        "datatype": "auto",
+        "broker": "c51329bfce28ddd0",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 400,
+        "wires": [
+            [
+                "5743d849f2bfe929"
+            ]
+        ]
+    },
+    {
+        "id": "a618070b38c9d281",
+        "type": "comment",
+        "z": "296a10caafc03760",
+        "g": "b1def47bcee243af",
+        "name": "Receive command",
+        "info": "",
+        "x": 170,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "5ed01ab412d84980",
+        "type": "switch",
+        "z": "296a10caafc03760",
+        "g": "b1def47bcee243af",
+        "name": "Check From Number",
+        "property": "payload.WaId",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "6283153282820",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 340,
+        "y": 160,
+        "wires": [
+            [
+                "5eeb5066720dd406",
+                "ca239e1ce943eaef"
+            ]
+        ]
+    },
+    {
+        "id": "5eeb5066720dd406",
+        "type": "switch",
+        "z": "296a10caafc03760",
+        "g": "b1def47bcee243af",
+        "name": "Check Status",
+        "property": "payload.Body",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "Status",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 550,
+        "y": 160,
+        "wires": [
+            [
+                "2980915aecb83227"
+            ],
+            [
+                "d4963ca7aeb3c0ab"
+            ]
+        ]
+    },
+    {
+        "id": "d2258af6302bf40b",
+        "type": "mqtt out",
+        "z": "296a10caafc03760",
+        "g": "b1def47bcee243af",
+        "name": "Send to ESP",
+        "topic": "yaser/ESP_Sub",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "c51329bfce28ddd0",
+        "x": 950,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "a3efe8c17cfe3372",
+        "type": "comment",
+        "z": "296a10caafc03760",
+        "g": "8224221a2f77f718",
+        "name": "Receive MQTT and send to From Number",
+        "info": "",
+        "x": 220,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "5743d849f2bfe929",
+        "type": "change",
+        "z": "296a10caafc03760",
+        "g": "8224221a2f77f718",
+        "name": "Get msg.toNumber",
+        "rules": [
+            {
+                "t": "set",
+                "p": "sender",
+                "pt": "msg",
+                "to": "from_no",
+                "tot": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 350,
+        "y": 400,
+        "wires": [
+            [
+                "1bfea2d1c6170134"
+            ]
+        ]
+    },
+    {
+        "id": "1bfea2d1c6170134",
+        "type": "function",
+        "z": "296a10caafc03760",
+        "g": "8224221a2f77f718",
+        "name": "Status",
+        "func": "var data = msg.payload;\nvar json = JSON.parse(data);\nvar red = json.red\nvar yellow = json.yellow\nvar green = json.green\n\nif (red == true){\n    red = \"ON\"\n}\nelse {\n    red = \"OFF\"\n}\n\nif (yellow == true){\n    yellow = \"ON\"\n}\nelse {\n    yellow = \"OFF\"\n}\n\nif (green == true){\n    green = \"ON\"\n}\nelse {\n    green = \"OFF\"\n}\n\nmsg.payload = \"*Current Status:*\\nRED = \" + red + \"\\n\" + \n\"YELLOW = \" + yellow + \"\\n\" + \n\"GREEN = \" + green\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 400,
+        "wires": [
+            [
+                "568f533c8f3ee837"
+            ]
+        ]
+    },
+    {
+        "id": "d4963ca7aeb3c0ab",
+        "type": "function",
+        "z": "296a10caafc03760",
+        "g": "b1def47bcee243af",
+        "name": "Split",
+        "func": "let text = msg.payload.Body\nconst myArray = text.split(\" \");\nlet device = myArray[0].toLowerCase();\nlet trigger = myArray[1].toLowerCase();\n\nmsg.payload = {\"device\":device,\"trigger\":trigger};\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 200,
+        "wires": [
+            [
+                "d2258af6302bf40b"
+            ]
+        ]
+    },
+    {
+        "id": "ce8ebe2fda7f4903",
+        "type": "comment",
+        "z": "296a10caafc03760",
+        "g": "b1def47bcee243af",
+        "name": "Send Status",
+        "info": "",
+        "x": 750,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "91af376003903442",
+        "type": "comment",
+        "z": "296a10caafc03760",
+        "g": "b1def47bcee243af",
+        "name": "Send Trigger",
+        "info": "",
+        "x": 750,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "c00469b602ba3cf5",
+        "type": "http in",
+        "z": "296a10caafc03760",
+        "g": "b1def47bcee243af",
+        "name": "",
+        "url": "/webhook",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 140,
+        "y": 160,
+        "wires": [
+            [
+                "5ed01ab412d84980"
+            ]
+        ]
+    },
+    {
+        "id": "ca239e1ce943eaef",
+        "type": "change",
+        "z": "296a10caafc03760",
+        "g": "b1def47bcee243af",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "from_no",
+                "pt": "flow",
+                "to": "payload.WaId",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "568f533c8f3ee837",
+        "type": "function",
+        "z": "296a10caafc03760",
+        "g": "8224221a2f77f718",
+        "name": "function 1",
+        "func": "msg.url = \"https:\";\nmsg.headers = {};\nmsg.headers[\"Content-Type\"] = \"application/x-www-form-urlencoded\";\nmsg.method = \"POST\";\n\nvar payload = {\n    \"Body\": msg.payload,\n    \"From\": \"whatsapp:+14155238886\",\n    \"To\": \"whatsapp:\" + msg.sender\n};\n\nmsg.payload = Object.keys(payload).map(key =>\n    encodeURIComponent(key) + '=' + encodeURIComponent(payload[key])\n).join('&');\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 400,
+        "wires": [
+            [
+                "ed482dbc6eac890b"
+            ]
+        ]
+    },
+    {
+        "id": "ed482dbc6eac890b",
+        "type": "http request",
+        "z": "296a10caafc03760",
+        "g": "8224221a2f77f718",
+        "name": "",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "basic",
+        "senderr": false,
+        "headers": [],
+        "x": 890,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2980915aecb83227",
+        "type": "function",
+        "z": "296a10caafc03760",
+        "g": "b1def47bcee243af",
+        "name": "Status",
+        "func": "let text = msg.payload.Body\nmsg.payload = text.toLowerCase();\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 120,
+        "wires": [
+            [
+                "d2258af6302bf40b"
+            ]
+        ]
+    },
+    {
+        "id": "62af73c5950e6e23",
+        "type": "comment",
+        "z": "296a10caafc03760",
+        "g": "8224221a2f77f718",
+        "name": "Change Your API",
+        "info": "",
+        "x": 740,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "c51329bfce28ddd0",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.emqx.io",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]
